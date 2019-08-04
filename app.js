@@ -41,11 +41,7 @@ function startRecording() {
 		https://addpipe.com/blog/audio-constraints-getusermedia/
 	*/
     
-    var constraints = { audio: {
-        sampleRate: 16000,
-        channelCount: 1,
-        volume: 1.0
-    	}, 
+    var constraints = { audio: true, 
     	video:false }
 
  	/*
@@ -72,6 +68,7 @@ function startRecording() {
 		audioContext = new AudioContext(
 			{sampleRate: 16000}
 			);
+		console.log('new an Audiocontext');
 		//update the format 
 		document.getElementById("formats").innerHTML="Format: 1 channel pcm @ "+audioContext.sampleRate/1000+"kHz"
 
