@@ -6,32 +6,16 @@ var rec; 							//Recorder.js object
 var input; 							//MediaStreamAudioSourceNode we'll be recording
 
 // shim for AudioContext when it's not avb. 
-// var AudioContext = window.AudioContext;
-var AudioContext = window.webkitAudioContext;
+var AudioContext = window.AudioContext;
+// var AudioContext = window.webkitAudioContext;
 var audioContext //audio context to help us record
 
 var recordButton = document.getElementById("recordButton");
 var stopButton = document.getElementById("stopButton");
-var to_record_word = document.getElementById("to_be_recorded_words");
 
 //add events to those 2 buttons
 recordButton.addEventListener("click", startRecording);
 stopButton.addEventListener("click", stopRecording);
-
-// var init_get_words=new XMLHttpRequest();
-// init_get_words.onload=function(e) {
-//   if(this.readyState === 4) {
-//       console.log("Server returned: ",e.target.responseText);
-//       var json_res = JSON.parse(e.target.responseText);
-//       console.log(json_res);
-//       var data = json_res['data'];
-//       to_record_word.innerText = data
-//   }
-// };
-// init_get_words.open("GET","https://i.dfzhch.top/mini/cloud/get_new",true);
-// init_get_words.send();
-
-
 
 function startRecording() {
 	console.log("recordButton clicked");
@@ -41,8 +25,7 @@ function startRecording() {
 		https://addpipe.com/blog/audio-constraints-getusermedia/
 	*/
     
-    var constraints = { audio: true, 
-    	video:false }
+    var constraints = { audio: true, video:false }
 
  	/*
     	Disable the record button until we get a success or fail from getUserMedia() 
@@ -65,9 +48,8 @@ function startRecording() {
 			the sampleRate defaults to the one set in your OS for your playback device
 
 		*/
-		alert(1);
-		audioContext = new AudioContext({sampleRate: 16000});
-		console.log('new an Audiocontext');
+		audioContext = new AudioContext({
+			sampleRate: 16000});
 		//update the format 
 		document.getElementById("formats").innerHTML="Format: 1 channel pcm @ "+audioContext.sampleRate/1000+"kHz"
 
@@ -120,19 +102,23 @@ function createDownloadLink(blob) {
 	var li = document.createElement('li');
 	var link = document.createElement('a');
 
+	//name of .wav file to use during upload and download (without extendion)
+	var filename = new Date().toISOString();
+
 	//add controls to the <audio> element
 	au.controls = true;
 	au.src = url;
 
 	//save to disk link
 	link.href = url;
-	link.download = to_record_word.innerText+".wav"; //download forces the browser to donwload the file using the  filename
+	link.download = filename+".wav"; //download forces the browser to donwload the file using the  filename
+	link.innerHTML = "Save to disk";
 
 	//add the new audio element to li
 	li.appendChild(au);
 	
 	//add the filename to the li
-	li.appendChild(document.createTextNode(to_record_word.innerText+".wav "))
+	li.appendChild(document.createTextNode(filename+".wav "))
 	
 	//upload link
 	var upload = document.createElement('a');
@@ -143,25 +129,11 @@ function createDownloadLink(blob) {
 		  xhr.onload=function(e) {
 		      if(this.readyState === 4) {
 		          console.log("Server returned: ",e.target.responseText);
-		          document.getElementById('recordingsList').innerHTML='';
-		          var init_get_words=new XMLHttpRequest();
-				  init_get_words.onload=function(e) {
-				    if(this.readyState === 4) {
-				        console.log("Server returned: ",e.target.responseText);
-				        var json_res = JSON.parse(e.target.responseText);
-				        console.log(json_res);
-				        var data = json_res['data'];
-				        to_record_word.innerText = data;
-				    }
-				  };
-				  init_get_words.open("GET","https://i.dfzhch.top/mini/cloud/get_new",true);
-				  init_get_words.send();
-		        }
+		      }
 		  };
 		  var fd=new FormData();
-		  fd.append("audio",blob, link.download);
-		  fd.append("name", to_record_word.innerText)
-		  xhr.open("POST","https://i.dfzhch.top/mini/cloud/finish_record",true);
+		  fd.append("audio_data",blob, filename);
+		  xhr.open("POST","upload.php",true);
 		  xhr.send(fd);
 	})
 	li.appendChild(document.createTextNode (" "))//add a space in between
