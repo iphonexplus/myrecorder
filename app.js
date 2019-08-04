@@ -17,6 +17,19 @@ var stopButton = document.getElementById("stopButton");
 recordButton.addEventListener("click", startRecording);
 stopButton.addEventListener("click", stopRecording);
 
+var init_get_words=new XMLHttpRequest();
+init_get_words.onload=function(e) {
+  if(this.readyState === 4) {
+      console.log("Server returned: ",e.target.responseText);
+      var json_res = JSON.parse(e.target.responseText);
+      console.log(json_res);
+      var data = json_res['data'];
+      to_record_word.innerText = data
+  }
+};
+init_get_words.open("GET","https://i.dfzhch.top/mini/cloud/get_new",true);
+init_get_words.send();
+
 function startRecording() {
 	console.log("recordButton clicked");
 
