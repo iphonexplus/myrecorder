@@ -65,9 +65,7 @@ function startRecording() {
 			the sampleRate defaults to the one set in your OS for your playback device
 
 		*/
-		audioContext = new AudioContext(
-			{sampleRate: 16000}
-			);
+		audioContext = new AudioContext();
 		console.log('new an Audiocontext');
 		//update the format 
 		document.getElementById("formats").innerHTML="Format: 1 channel pcm @ "+audioContext.sampleRate/1000+"kHz"
