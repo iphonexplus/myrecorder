@@ -65,6 +65,7 @@ function startRecording() {
 			the sampleRate defaults to the one set in your OS for your playback device
 
 		*/
+		alert(1);
 		audioContext = new AudioContext();
 		console.log('new an Audiocontext');
 		//update the format 
